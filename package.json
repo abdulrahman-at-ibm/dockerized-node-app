@@ -5,10 +5,14 @@
   "author": "First Last <first.last@example.com>",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": " ava"
   },
   "dependencies": {
     "express": "^4.16.1"
+  },
+  "devDependencies": {
+    "ava": "^3.15.0",
+    "supertest": "^6.1.3"
   }
 }
-
