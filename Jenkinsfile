@@ -3,9 +3,7 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     
-    agent {
-        label 'redhat-0803 && amd64 && docker'
-    }
+    agent any
     
     stages {
         stage('build') {
