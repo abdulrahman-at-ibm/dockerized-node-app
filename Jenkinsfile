@@ -10,11 +10,11 @@ pipeline {
             when {
                 branch 'master'
             }
-            sh "docker build -t docker/getting-started ."
+            sh "docker build -t abdulrahman14449/dockerized-node-app ."
 
             steps {
-                withDockerRegistry(['https://registry.hub.docker.com', 'docker-hub']) {
-                    sh("docker push docker/getting-started")
+                withDockerRegistry([url: "", credentialsId: "docker_hub_id"]) {
+                    sh("docker push abdulrahman14449/dockerized-node-app")
                 }
             }
         }
