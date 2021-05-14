@@ -1,24 +1,22 @@
-node {
-    def app
-    stage('Clone repository') {
-        checkout scm
+pipeline {
+    options {
+        timeout(time: 1, unit: 'HOURS')
     }
-
-    stage('Build image') {
-        app = docker.build("abdulrahman14449/express-app")
+    agent {
+        label 'redhat-0803 && amd64 && docker'
     }
+    stages {
+        stage('build and push') {
+            when {
+                branch 'master'
+            }
+            sh "docker build -t docker/getting-started ."
 
-    stage('Test image') {
-        app.inside {
-            sh 'echo "Tests passed"'        
+            steps {
+                withDockerRegistry(['https://registry.hub.docker.com', 'docker-hub']) {
+                    sh("docker push docker/getting-started")
+                }
+            }
         }
     }
-
-   stage('Push image') {
-       docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-           app.push("${env.BUILD_NUMBER}")
-           app.push("latest")
-       }
-       echo "Attempting to push Docker build to Docker Hub"
-   }
 }
