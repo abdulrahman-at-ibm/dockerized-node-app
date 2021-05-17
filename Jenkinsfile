@@ -1,22 +1,24 @@
-pipeline {
-    options {
-        timeout(time: 1, unit: 'HOURS')
+node {
+    def app
+
+    stage('Clone repository') {
+        checkout scm
     }
-    
-    agent any
-    
-    stages {
-        stage('build') {
-            steps {
-                sh "docker build -t abdulrahman14449/dockerized-node-app ."
-            }
+
+    stage('Build image') {
+        app = docker.build("abdulrahman14449/dockerized-node-app")
+    }
+
+    stage('Test image') {
+        app.inside {
+            sh 'echo "Tests passed"'
         }
-        stage('push') {
-            steps {
-                withDockerRegistry([url: "", credentialsId: "docker_hub_id"]) {
-                    sh("docker push abdulrahman14449/dockerized-node-app")
-                }
-            }
+    }
+
+    stage('Push image') {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
         }
     }
 }
